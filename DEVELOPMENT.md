@@ -46,3 +46,4 @@
 - CONFIG_ROLE: Configuration management
 ## Events
 ### STASPenaltyApplied
+- Emitted when penalty fee is applied
