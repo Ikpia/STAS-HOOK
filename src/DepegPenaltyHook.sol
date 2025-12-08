@@ -89,7 +89,7 @@ contract STASHook is BaseOverrideFee, AccessControl {
     /// @notice Emitted when target range is set for a pool
     event TargetRange(PoolId indexed poolId, int24 tickLower, int24 tickUpper);
 
-    /// @notice Constructs a new DepegPenaltyHook
+    /// @notice Constructs a new STASHook
     /// @param _poolManager The Uniswap V4 PoolManager address
     /// @param _pythAdapter The PythOracleAdapter contract address
     /// @param _priceFeedId0 Pyth price feed ID for token0
