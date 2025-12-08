@@ -50,3 +50,4 @@
 ### STASRebateIssued
 - Emitted when stabilization rebate is issued
 ### TargetRange
+- Emitted during pool initialization
