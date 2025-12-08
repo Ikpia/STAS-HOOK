@@ -60,14 +60,25 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
     bytes32 public immutable priceFeedId1; // Pyth feed for token1 (e.g., HYPE)
     /// @notice Reserve token address for penalties and rebates
     address public immutable reserveToken; // Token for penalties/rebates (e.g., USDC or BONUS)
+    /// @notice Confidence threshold in basis points (1% = 100 bps)
+    /// @dev If confidence ratio exceeds this, use base fee only
     uint256 public constant VOLATILE_THRESHOLD = 100; // 1% confidence threshold
+    /// @notice Depeg threshold in basis points (0.5% = 50 bps)
+    /// @dev Minimum depeg amount to trigger fee adjustments
     uint256 public constant DEPEG_THRESHOLD = 50; // 0.5% depeg threshold
+    /// @notice Maximum penalty fee in basis points (5% = 50000 bps)
     uint24 public constant MAX_PENALTY_FEE = 50000; // 5%
+    /// @notice Minimum stabilization fee in basis points (0.05% = 500 bps)
     uint24 public constant MIN_STABILIZE_FEE = 500; // 0.05%
+    /// @notice Minimum reserve cut in basis points (20% = 2000 bps)
     uint256 public constant MIN_RESERVE_CUT_BPS = 2000; // 20%
+    /// @notice Maximum reserve cut in basis points (50% = 5000 bps)
     uint256 public constant MAX_RESERVE_CUT_BPS = 5000; // 50%
+    /// @notice Minimum rebate in basis points (0.05% = 500 bps)
     uint256 public constant MIN_REBATE_BPS = 500; // 0.05%
+    /// @notice Rebate scaling factor in basis points
     uint256 public constant REBATE_SCALE_BPS = 10; // 0.001% per 10 bps reduction
+    /// @notice Pause state of the hook
     bool public paused;
 
     event DepegPenaltyApplied(PoolId indexed poolId, bool zeroForOne, uint24 fee, uint256 reserveAmount);
