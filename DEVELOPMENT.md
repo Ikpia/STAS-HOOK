@@ -5,3 +5,4 @@
 - PythOracleAdapter: Oracle price feed adapter
 ## Testing Strategy
 ### Test Coverage
+- Depeg penalty application tests
