@@ -42,6 +42,7 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
     /// @notice Role identifier for config managers
     bytes32 public constant CONFIG_ROLE = keccak256("CONFIG_ROLE");
 
+    /// @notice State structure for each pool managed by the hook
     struct PoolState {
         uint24 baseFee; // Default fee (e.g., 3000 for 0.3%)
         uint256 lastDepegBps; // Last depeg ratio in basis points
