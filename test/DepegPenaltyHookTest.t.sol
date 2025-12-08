@@ -85,7 +85,7 @@ contract STASHookTest is Test {
         bytes memory constructorArgs =
             abi.encode(POOL_MANAGER, address(pythAdapter), USDC_ID, USDT_ID, reserveToken, user);
         (address hookAddress, bytes32 salt) =
-            HookMiner.find(CREATE2_DEPLOYER, FLAGS, type(DepegPenaltyHook).creationCode, constructorArgs);
+            HookMiner.find(CREATE2_DEPLOYER, FLAGS, type(STASHook).creationCode, constructorArgs);
 
         console.logBytes(constructorArgs);
         console.log(hookAddress);
