@@ -45,3 +45,4 @@
 - PAUSER_ROLE: Ability to pause contract
 - CONFIG_ROLE: Configuration management
 ## Events
+### STASPenaltyApplied
