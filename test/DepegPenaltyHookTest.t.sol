@@ -94,9 +94,9 @@ contract STASHookTest is Test {
         // Deploy via CREATE2 deployer
         vm.broadcast();
         (bool success,) =
-            CREATE2_DEPLOYER.call(abi.encodePacked(salt, type(DepegPenaltyHook).creationCode, constructorArgs));
+            CREATE2_DEPLOYER.call(abi.encodePacked(salt, type(STASHook).creationCode, constructorArgs));
         require(success, "Deployment failed");
-        hook = DepegPenaltyHook(hookAddress);
+        hook = STASHook(hookAddress);
         // vm.broadcast();
         // DepegPenaltyHook pointsHook = new DepegPenaltyHook{salt: salt}(IPoolManager(POOL_MANAGER), address(pythAdapter), USDC_ID, USDT_ID, reserveToken, user);
         // console.log(address(pointsHook));
