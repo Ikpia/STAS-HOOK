@@ -24,3 +24,4 @@
 - Capped at MAX_PENALTY_FEE (5%)
 ### Stabilization Rewards
 - Lower fees for trades that restore peg
+- Minimum fee floor at MIN_STABILIZE_FEE (0.05%)
