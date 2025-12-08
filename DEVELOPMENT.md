@@ -35,3 +35,4 @@
 ## Constants Reference
 ### Threshold Values
 - VOLATILE_THRESHOLD: 100 bps (1%)
+- DEPEG_THRESHOLD: 50 bps (0.5%)
