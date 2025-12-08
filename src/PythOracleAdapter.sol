@@ -25,6 +25,9 @@ contract PythOracleAdapter {
 
     /// @notice Get price, confidence, and publish time for a specified price feed
     /// @param priceFeedId The Pyth price feed ID (either priceFeedId0 or priceFeedId1)
+    /// @return price The current price from Pyth oracle
+    /// @return conf The confidence interval for the price
+    /// @return publishTime The timestamp when the price was published
     function getPriceWithConfidence(bytes32 priceFeedId)
         external
         view
