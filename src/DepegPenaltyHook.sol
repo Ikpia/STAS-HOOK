@@ -118,7 +118,8 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
         _grantRole(CONFIG_ROLE, _admin);
     }
 
-    /// @dev Modifier to check if not paused
+    /// @notice Modifier to check if contract is not paused
+    /// @dev Reverts if the contract is paused
     modifier whenNotPaused() {
         require(!paused, "DepegPenaltyHook: paused");
         _;
