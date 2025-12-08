@@ -49,3 +49,4 @@
 - Emitted when penalty fee is applied
 ### STASRebateIssued
 - Emitted when stabilization rebate is issued
+### TargetRange
