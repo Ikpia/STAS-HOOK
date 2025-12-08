@@ -27,3 +27,4 @@
 - Minimum fee floor at MIN_STABILIZE_FEE (0.05%)
 ## Integration Points
 ### Uniswap V4
+- Uses BaseOverrideFee hook pattern
