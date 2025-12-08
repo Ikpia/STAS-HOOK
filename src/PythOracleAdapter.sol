@@ -12,6 +12,8 @@ import {PythStructs} from "@pythnetwork/PythStructs.sol";
 contract PythOracleAdapter {
     IPyth public immutable pyth;
 
+    /// @notice Maximum allowed staleness for price feeds in seconds
+    /// @dev Default is 60 seconds. Can be updated by governance.
     uint256 public maxStaleness = 60; // Seconds; configurable
 
     constructor(address _pyth) {
