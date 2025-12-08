@@ -7,3 +7,4 @@
 ### Test Coverage
 - Depeg penalty application tests
 - Stabilization reward tests
+- High confidence scenario tests
