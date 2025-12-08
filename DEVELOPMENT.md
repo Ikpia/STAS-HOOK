@@ -40,3 +40,4 @@
 - MAX_PENALTY_FEE: 50000 bps (5%)
 - MIN_STABILIZE_FEE: 500 bps (0.05%)
 ## Access Control
+### Roles
