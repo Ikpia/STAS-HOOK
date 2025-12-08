@@ -37,3 +37,4 @@
 - VOLATILE_THRESHOLD: 100 bps (1%)
 - DEPEG_THRESHOLD: 50 bps (0.5%)
 ### Fee Limits
+- MAX_PENALTY_FEE: 50000 bps (5%)
