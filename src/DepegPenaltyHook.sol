@@ -50,10 +50,15 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
         uint256 totalPenaltyFees; // Accumulated penalty fees
     }
 
+    /// @notice Mapping from pool ID to pool state
     mapping(PoolId => PoolState) public poolStates;
+    /// @notice Pyth oracle adapter instance
     PythOracleAdapter public immutable pythAdapter;
+    /// @notice Pyth price feed ID for token0
     bytes32 public immutable priceFeedId0; // Pyth feed for token0 (e.g., kHYPE)
+    /// @notice Pyth price feed ID for token1
     bytes32 public immutable priceFeedId1; // Pyth feed for token1 (e.g., HYPE)
+    /// @notice Reserve token address for penalties and rebates
     address public immutable reserveToken; // Token for penalties/rebates (e.g., USDC or BONUS)
     uint256 public constant VOLATILE_THRESHOLD = 100; // 1% confidence threshold
     uint256 public constant DEPEG_THRESHOLD = 50; // 0.5% depeg threshold
