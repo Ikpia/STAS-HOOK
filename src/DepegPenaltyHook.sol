@@ -125,6 +125,12 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
         _;
     }
 
+    /// @notice Hook called after pool initialization
+    /// @param sender The address that initialized the pool
+    /// @param key The pool key identifying the pool
+    /// @param sqrtPriceX96 The initial sqrt price of the pool
+    /// @param tick The initial tick of the pool
+    /// @return selector The function selector for afterInitialize
     function _afterInitialize(address sender, PoolKey calldata key, uint160 sqrtPriceX96, int24 tick)
         internal
         override
