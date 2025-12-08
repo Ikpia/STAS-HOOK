@@ -20,3 +20,4 @@
 ## Fee Calculation Logic
 ### Penalty Fees
 - Applied when trades worsen depeg conditions
+- Scales with depeg severity
