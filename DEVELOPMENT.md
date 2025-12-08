@@ -41,3 +41,4 @@
 - MIN_STABILIZE_FEE: 500 bps (0.05%)
 ## Access Control
 ### Roles
+- ADMIN_ROLE: Full administrative access
