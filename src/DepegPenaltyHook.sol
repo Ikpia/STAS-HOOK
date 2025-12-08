@@ -83,9 +83,9 @@ contract STASHook is BaseOverrideFee, AccessControl {
     bool public paused;
 
     /// @notice Emitted when a depeg penalty is applied to a trade
-    event DepegPenaltyApplied(PoolId indexed poolId, bool zeroForOne, uint24 fee, uint256 reserveAmount);
+    event STASPenaltyApplied(PoolId indexed poolId, bool zeroForOne, uint24 fee, uint256 reserveAmount);
     /// @notice Emitted when a rebate is issued to a stabilizing trader
-    event DepegRebateIssued(PoolId indexed poolId, address trader, uint256 amount);
+    event STASRebateIssued(PoolId indexed poolId, address trader, uint256 amount);
     /// @notice Emitted when target range is set for a pool
     event TargetRange(PoolId indexed poolId, int24 tickLower, int24 tickUpper);
 
