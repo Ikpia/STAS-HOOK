@@ -6,3 +6,4 @@
 ## Testing Strategy
 ### Test Coverage
 - Depeg penalty application tests
+- Stabilization reward tests
