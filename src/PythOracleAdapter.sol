@@ -39,6 +39,9 @@ contract PythOracleAdapter {
     }
 
     /// @notice Compute confRatio in basis points (conf / |price| * 10000)
+    /// @param price The price value (can be negative)
+    /// @param conf The confidence interval
+    /// @return The confidence ratio in basis points (0-10000)
     function computeConfRatioBps(int64 price, uint64 conf) external pure returns (uint256) {
         if (price == 0) return 0;
         uint256 absPrice = price > 0 ? uint256(uint64(price)) : uint256(uint64(-price));
