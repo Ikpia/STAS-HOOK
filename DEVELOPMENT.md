@@ -23,3 +23,4 @@
 - Scales with depeg severity
 - Capped at MAX_PENALTY_FEE (5%)
 ### Stabilization Rewards
+- Lower fees for trades that restore peg
