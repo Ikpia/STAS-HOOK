@@ -191,6 +191,8 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
         return state.baseFee;
     }
 
+    /// @notice Returns the hook permissions required by this hook
+    /// @return permissions The permissions structure
     function getHookPermissions() public pure override returns (Hooks.Permissions memory permissions) {
         permissions = super.getHookPermissions();
         return permissions;
