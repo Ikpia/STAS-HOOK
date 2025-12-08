@@ -42,3 +42,4 @@
 ## Access Control
 ### Roles
 - ADMIN_ROLE: Full administrative access
+- PAUSER_ROLE: Ability to pause contract
