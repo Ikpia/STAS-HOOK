@@ -26,8 +26,11 @@ interface IMsgSender {
     function msgSender() external view returns (address);
 }
 
-/// @notice DepegPenaltyHook: Uniswap V4 hook that stabilizes 1:1 pegs using Pyth oracles.
-/// Penalizes trades that widen the peg and rewards those that restore it.
+/// @title DepegPenaltyHook
+/// @notice Uniswap V4 hook that stabilizes 1:1 pegs using Pyth oracles.
+/// @dev Penalizes trades that widen the peg and rewards those that restore it.
+/// This hook implements dynamic fee adjustment based on real-time oracle price feeds
+/// to maintain stablecoin pool stability during market stress events.
 contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
     using PoolIdLibrary for PoolKey;
     using LPFeeLibrary for uint24;
