@@ -34,3 +34,4 @@
 - Confidence interval validation
 ## Constants Reference
 ### Threshold Values
+- VOLATILE_THRESHOLD: 100 bps (1%)
