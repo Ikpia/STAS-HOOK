@@ -49,7 +49,10 @@ contract PythOracleAdapter {
     }
 
     /// @notice Set max staleness (governance)
+    /// @param _maxStaleness New maximum staleness in seconds
+    /// @dev Only callable by governance. Should be set based on oracle update frequency.
     function setMaxStaleness(uint256 _maxStaleness) external {
+        require(_maxStaleness > 0, "PythOracleAdapter: invalid staleness");
         maxStaleness = _maxStaleness;
     }
 }
