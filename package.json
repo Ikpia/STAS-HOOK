@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
+    "@pythnetwork/pyth-sdk-solidity": "^4.3.1"
+  }
+}
