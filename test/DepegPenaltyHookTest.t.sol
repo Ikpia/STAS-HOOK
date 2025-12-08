@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import {console} from "forge-std/console.sol";
 
 import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
-import {DepegPenaltyHook} from "../src/DepegPenaltyHook.sol";
+import {STASHook} from "../src/STASHook.sol";
 import {MockERC20} from "../src/mocks/MockERC20.sol";
 import {PythOracleAdapter} from "../src/PythOracleAdapter.sol";
 import {PoolKey} from "@uniswap/v4-core/src/types/PoolKey.sol";
