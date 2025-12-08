@@ -25,12 +25,12 @@ import {IV4Router} from "@uniswap/v4-periphery/src/interfaces/IV4Router.sol";
 import {IUniversalRouter} from "@uniswap/universal-router/contracts/interfaces/IUniversalRouter.sol";
 import {Commands} from "@uniswap/universal-router/contracts/libraries/Commands.sol";
 
-contract DepegPenaltyHookTest is Test {
+contract STASHookTest is Test {
     using PoolIdLibrary for PoolKey;
     using LPFeeLibrary for uint24;
     using CurrencyLibrary for Currency;
 
-    DepegPenaltyHook public hook;
+    STASHook public hook;
     PythOracleAdapter public pythAdapter;
 
     MockERC20 mockUSDC;
