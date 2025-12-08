@@ -13,3 +13,4 @@
 - Foundry installed
 - Node.js and npm installed
 - Access to Pyth Network oracle
+## Security Considerations
