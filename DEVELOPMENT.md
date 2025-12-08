@@ -47,3 +47,4 @@
 ## Events
 ### STASPenaltyApplied
 - Emitted when penalty fee is applied
+### STASRebateIssued
