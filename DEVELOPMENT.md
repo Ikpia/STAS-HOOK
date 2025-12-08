@@ -28,3 +28,4 @@
 ## Integration Points
 ### Uniswap V4
 - Uses BaseOverrideFee hook pattern
+- Implements afterInitialize and beforeSwap hooks
