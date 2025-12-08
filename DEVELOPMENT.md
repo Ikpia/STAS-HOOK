@@ -30,3 +30,4 @@
 - Uses BaseOverrideFee hook pattern
 - Implements afterInitialize and beforeSwap hooks
 ### Pyth Network
+- Real-time price feeds for both pool tokens
