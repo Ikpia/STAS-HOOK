@@ -21,3 +21,4 @@
 ### Penalty Fees
 - Applied when trades worsen depeg conditions
 - Scales with depeg severity
+- Capped at MAX_PENALTY_FEE (5%)
