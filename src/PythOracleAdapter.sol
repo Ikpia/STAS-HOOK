@@ -16,7 +16,10 @@ contract PythOracleAdapter {
     /// @dev Default is 60 seconds. Can be updated by governance.
     uint256 public maxStaleness = 60; // Seconds; configurable
 
+    /// @notice Constructs a new PythOracleAdapter
+    /// @param _pyth The address of the Pyth Network oracle contract
     constructor(address _pyth) {
+        require(_pyth != address(0), "PythOracleAdapter: zero address");
         pyth = IPyth(_pyth);
     }
 
