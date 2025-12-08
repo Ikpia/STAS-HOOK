@@ -10,3 +10,4 @@
 - High confidence scenario tests
 ## Deployment Guide
 ### Prerequisites
+- Foundry installed
