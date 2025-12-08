@@ -35,8 +35,11 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
     using PoolIdLibrary for PoolKey;
     using LPFeeLibrary for uint24;
 
+    /// @notice Role identifier for administrators
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    /// @notice Role identifier for pausers
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    /// @notice Role identifier for config managers
     bytes32 public constant CONFIG_ROLE = keccak256("CONFIG_ROLE");
 
     struct PoolState {
