@@ -1,18 +1,24 @@
-# Compiler files
-cache/
+# Foundry
 out/
+cache/
+broadcast/
+.chainid
 
-# Ignores development (and goerli) broadcast logs
-!/broadcast
-/broadcast/*/31337/
-/broadcast/*/5/
-/broadcast/**/dry-run/
-
-# Docs
-docs/
-
-# Dotenv file
-.env
-
-# Node modules
+# Node
 node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
