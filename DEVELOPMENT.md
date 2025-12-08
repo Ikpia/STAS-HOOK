@@ -15,3 +15,4 @@
 - Access to Pyth Network oracle
 ## Security Considerations
 ### Oracle Reliability
+- Pyth Network provides high-frequency price updates
