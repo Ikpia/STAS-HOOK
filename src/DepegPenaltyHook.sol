@@ -122,7 +122,7 @@ contract STASHook is BaseOverrideFee, AccessControl {
     /// @notice Modifier to check if contract is not paused
     /// @dev Reverts if the contract is paused
     modifier whenNotPaused() {
-        require(!paused, "DepegPenaltyHook: paused");
+        require(!paused, "STASHook: paused");
         _;
     }
 
