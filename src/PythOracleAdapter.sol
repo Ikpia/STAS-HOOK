@@ -4,8 +4,11 @@ pragma solidity ^0.8.20;
 import {IPyth} from "@pythnetwork/IPyth.sol";
 import {PythStructs} from "@pythnetwork/PythStructs.sol";
 
-/// @notice PythOracleAdapter: Adapter for reading Pyth price and confidence for two tokens.
-/// Normalizes values and provides helpers for confRatio.
+/// @title PythOracleAdapter
+/// @notice Adapter for reading Pyth price and confidence for two tokens.
+/// @dev Normalizes values and provides helpers for confRatio calculation.
+/// This adapter wraps Pyth Network oracle calls and provides standardized
+/// price and confidence data for use in the DepegPenaltyHook.
 contract PythOracleAdapter {
     IPyth public immutable pyth;
 
