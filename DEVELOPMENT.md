@@ -17,3 +17,4 @@
 ### Oracle Reliability
 - Pyth Network provides high-frequency price updates
 - Confidence thresholds prevent volatile price usage
+## Fee Calculation Logic
