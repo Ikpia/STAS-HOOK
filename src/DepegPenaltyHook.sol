@@ -103,6 +103,10 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
         address _reserveToken,
         address _admin
     ) BaseOverrideFee(_poolManager) {
+        require(_pythAdapter != address(0), "DepegPenaltyHook: zero pyth adapter");
+        require(_reserveToken != address(0), "DepegPenaltyHook: zero reserve token");
+        require(_admin != address(0), "DepegPenaltyHook: zero admin");
+        
         pythAdapter = PythOracleAdapter(_pythAdapter);
         priceFeedId0 = _priceFeedId0;
         priceFeedId1 = _priceFeedId1;
