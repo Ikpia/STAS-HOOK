@@ -143,6 +143,12 @@ contract DepegPenaltyHook is BaseOverrideFee, AccessControl {
         return this.afterInitialize.selector;
     }
 
+    /// @notice Calculates the dynamic fee based on depeg conditions
+    /// @param sender The address initiating the swap
+    /// @param key The pool key identifying the pool
+    /// @param params The swap parameters
+    /// @param hookData Additional hook data
+    /// @return The calculated fee in basis points
     function _getFee(address sender, PoolKey calldata key, SwapParams calldata params, bytes calldata hookData)
         internal
         view
