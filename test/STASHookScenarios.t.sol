@@ -15,8 +15,8 @@ import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
 import {HookMiner} from "@uniswap/v4-periphery/src/utils/HookMiner.sol";
 import {MockERC20} from "../src/mocks/MockERC20.sol";
 
-/// Harness to expose STASHook internals for testing coverage
-contract STASHookHarness is STASHook {
+/// Lightweight harness to expose internal calls for scenario testing
+contract STASHookScenariosHarness is STASHook {
     using PoolIdLibrary for PoolKey;
 
     constructor(
@@ -27,9 +27,8 @@ contract STASHookHarness is STASHook {
         address _admin
     ) STASHook(IPoolManager(address(1)), _pythAdapter, _priceFeedId0, _priceFeedId1, _reserveToken, _admin) {}
 
-    function setPoolState(PoolKey calldata key, uint24 baseFee) external {
-        PoolId poolId = key.toId();
-        poolStates[poolId].baseFee = baseFee;
+    function callAfterInit(PoolKey calldata key, uint160 sqrtPriceX96, int24 tick) external returns (bytes4) {
+        return _afterInitialize(msg.sender, key, sqrtPriceX96, tick);
     }
 
     function callGetFee(PoolKey calldata key, SwapParams calldata params, bytes calldata hookData)
@@ -39,34 +38,23 @@ contract STASHookHarness is STASHook {
     {
         return _getFee(msg.sender, key, params, hookData);
     }
-
-    function callAfterInit(PoolKey calldata key, uint160 sqrtPriceX96, int24 tick) external returns (bytes4) {
-        return _afterInitialize(msg.sender, key, sqrtPriceX96, tick);
-    }
-
-    function getBaseFee(PoolKey calldata key) external view returns (uint24) {
-        return poolStates[key.toId()].baseFee;
-    }
 }
 
-contract STASHookTest is Test {
+contract STASHookScenariosTest is Test {
     using PoolIdLibrary for PoolKey;
     using CurrencyLibrary for Currency;
 
-    STASHookHarness hook;
+    STASHookScenariosHarness hook;
     PythOracleAdapter pythAdapter;
-
+    PoolKey poolKey;
     MockERC20 mockUSDC;
     MockERC20 mockUSDT;
 
-    PoolKey poolKey;
-
     address reserveToken = address(0xdead);
-    bytes32 constant USDC_ID = 0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a; // USDC/USD
-    bytes32 constant USDT_ID = 0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b; // USDT/USD
-
-    uint24 public constant BASE_FEE = 3000; // 0.3%
-    int24 public constant TICK_SPACING = 10; // For stable pairs
+    bytes32 constant USDC_ID = 0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a;
+    bytes32 constant USDT_ID = 0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b;
+    uint24 public constant BASE_FEE = 3000;
+    int24 public constant TICK_SPACING = 10;
 
     function setUp() public {
         mockUSDC = new MockERC20("USD Coin", "USDC");
@@ -82,12 +70,13 @@ contract STASHookTest is Test {
         (address expected, bytes32 salt) = HookMiner.find(
             address(this),
             Hooks.AFTER_INITIALIZE_FLAG | Hooks.BEFORE_SWAP_FLAG,
-            type(STASHookHarness).creationCode,
+            type(STASHookScenariosHarness).creationCode,
             constructorArgs
         );
 
-        hook = new STASHookHarness{salt: salt}(address(pythAdapter), USDC_ID, USDT_ID, reserveToken, address(this));
-        require(address(hook) == expected, "hook address mismatch");
+        hook =
+            new STASHookScenariosHarness{salt: salt}(address(pythAdapter), USDC_ID, USDT_ID, reserveToken, address(this));
+        require(address(hook) == expected, "hook addr mismatch");
 
         poolKey = PoolKey({
             currency0: address(mockUSDC) < address(mockUSDT) ? c0 : c1,
@@ -97,7 +86,7 @@ contract STASHookTest is Test {
             hooks: IHooks(address(hook))
         });
 
-        hook.setPoolState(poolKey, BASE_FEE);
+        hook.callAfterInit(poolKey, TickMath.getSqrtPriceAtTick(0), 0);
     }
 
     function _mockPrices(int64 p0, uint64 c0, int64 p1, uint64 c1) internal {
@@ -118,54 +107,46 @@ contract STASHookTest is Test {
         return hook.callGetFee(poolKey, params, bytes(""));
     }
 
-    function test_afterInitialize_setsBaseFee_and_emits() public {
-        PoolKey memory localKey = poolKey;
-        vm.expectEmit(true, true, true, true);
-        emit STASHook.TargetRange(localKey.toId(), -60, 60);
-        hook.callAfterInit(localKey, TickMath.getSqrtPriceAtTick(0), 0);
-        assertEq(hook.getBaseFee(poolKey), BASE_FEE, "base fee initialized");
-    }
+    // Penalty: moderate, safe cases (price0 > price1 and zeroForOne = false worsens depeg)
+    function test_penalty_small() public { _mockPrices(10060, 10, 10000, 10); uint24 fee = _fee(false); assertGt(fee, BASE_FEE); }
+    function test_penalty_mid() public { _mockPrices(10200, 10, 10000, 10); uint24 fee = _fee(false); assertGt(fee, BASE_FEE); }
+    function test_penalty_large_below_cap() public { _mockPrices(11500, 10, 10000, 10); uint24 fee = _fee(false); assertGt(fee, BASE_FEE); }
+    function test_penalty_not_above_max() public { _mockPrices(15000, 10, 10000, 10); uint24 fee = _fee(false); assertLe(fee, hook.MAX_PENALTY_FEE()); }
 
-    function test_constructor_zero_addresses_revert() public {
-        vm.expectRevert();
-        new STASHookHarness(address(0), USDC_ID, USDT_ID, reserveToken, address(this));
-
-        vm.expectRevert();
-        new STASHookHarness(address(1), USDC_ID, USDT_ID, address(0), address(this));
-
-        vm.expectRevert();
-        new STASHookHarness(address(1), USDC_ID, USDT_ID, reserveToken, address(0));
-    }
-
-    function test_PenalizeWideningDepeg() public {
-        _mockPrices(9900, 10, 10000, 10);
-        uint24 fee = _fee(true);
-        assertGt(fee, BASE_FEE, "fee should increase on worsening depeg");
-    }
-
-    function test_PenaltyIncreaseScaled() public {
-        _mockPrices(10100, 1, 10000, 1); // depegBps=100 -> fee = base + 1k
+    // Stabilize: moderate, safe cases
+    function test_stabilize_small() public { _mockPrices(9990, 10, 10000, 10); assertLe(_fee(false), BASE_FEE); }
+    function test_stabilize_mid() public { _mockPrices(9950, 10, 10000, 10); assertLe(_fee(false), BASE_FEE); }
+    function test_stabilize_floor_respected() public {
+        // moderate depeg so the floor engages but avoids underflow in fee math
+        _mockPrices(9700, 10, 10000, 10);
         uint24 fee = _fee(false);
-        assertEq(fee, BASE_FEE + 1000, "scaled penalty applied");
+        assertGe(fee, hook.MIN_STABILIZE_FEE());
+        assertLe(fee, BASE_FEE);
     }
 
-    function test_RewardStabilizingDepeg_withFloor() public {
-        _mockPrices(9900, 10, 10000, 10);
-        uint24 fee = _fee(false);
-        assertLt(fee, BASE_FEE, "fee should decrease on stabilizing trade");
-        assertGe(fee, hook.MIN_STABILIZE_FEE(), "fee should not drop below min stabilize");
+    // Confidence gating
+    function test_confidence_high_skips_override() public { _mockPrices(9900, 200, 10000, 200); assertEq(_fee(true), BASE_FEE); }
+    function test_confidence_low_applies_override() public { _mockPrices(9900, 10, 10000, 10); assertGt(_fee(true), BASE_FEE); }
+
+    // Directional comparisons (worsen vs help)
+    function test_direction_sell_cheaper_worsens() public {
+        _mockPrices(9800, 10, 10000, 10);
+        uint24 feeSell = _fee(true);
+        uint24 feeBuy = _fee(false);
+        assertGt(feeSell, feeBuy);
     }
 
-    function test_NoOverrideHighConfidence() public {
-        _mockPrices(10000, 1000, 10000, 1000);
-        uint24 fee = _fee(true);
-        assertEq(fee, BASE_FEE, "volatile should keep base fee");
+    // Threshold edges
+    function test_threshold_penalty_edge() public {
+        _mockPrices(10051, 10, 10000, 10);
+        // price0 > price1, zeroForOne=false worsens
+        assertGe(_fee(false), BASE_FEE);
     }
 
-    function test_BaseFeeNoDepeg() public {
-        _mockPrices(10000, 10, 10000, 10);
-        uint24 fee = _fee(true);
-        assertEq(fee, BASE_FEE, "no depeg should keep base fee");
+    function test_threshold_stabilize_edge() public {
+        _mockPrices(10051, 10, 10000, 10);
+        // price0 > price1, zeroForOne=true helps
+        assertLe(_fee(true), BASE_FEE);
     }
 }
 

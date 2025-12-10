@@ -2,11 +2,15 @@
 src = "src"
 out = "out"
 libs = ["lib"]
-solc_version = "0.8.20"
+solc_version = "0.8.26"
 via_ir = false
 evm_version = "cancun"
 ffi = true
 fs_permissions = [{access = "read-write", path = ".forge-snapshots/"}]
+ignored_error_codes = [6546]
+
+[profile.default.coverage]
+exclude = ["script/**", "test/utils/**", "test/utils/libraries/**"]
 
 [lint]
 exclude_lints = ["screaming-snake-case-immutable", "screaming-snake-case-const"]

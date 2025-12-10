@@ -37,5 +37,19 @@ npm install
 forge test --fork-url https://ethereum-rpc.publicnode.com -vvvvv
 ```
 
+### Run the Fork Demo (README-aligned hook behavior)
+```bash
+forge script script/testing/ForkHookIntegration.s.sol:ForkHookIntegration \
+  --fork-url $MAINNET_RPC_URL -vvv
+```
+Requires `.env` with `MAINNET_RPC_URL`, `PYTH_ADDRESS`, `PRICE_FEED_ID0/1`, `RESERVE_TOKEN`, and `PRIVATE_KEY` (admin defaults to that key).
+
+### Deployed Addresses (Sepolia)
+Update with your live deployments (also mirrored in `.env`):
+- `PYTH_ORACLE_ADAPTER_ADDRESS=<...>`
+- `STAS_HOOK_ADDRESS=<...>`
+- `RESERVE_TOKEN=<...>` (test token)
+- `POOL_MANAGER_ADDRESS=<...>`
+
 ## Project Vision
 STAS Hook aims to provide a dynamic, oracle-driven stabilization mechanism for stablecoin pools, improving resilience during stressful events while protecting both LPs and users.
