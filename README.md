@@ -15,7 +15,7 @@ Stable pairs drift from parity during stress due to liquidity imbalance, oracle 
 ## Solution & Impact
 - **Dynamic, oracle-driven fees:** Pulls real-time Pyth prices and confidence to scale penalties or rebates per trade direction.
 - **Threshold-aware:** Detects depeg magnitude and direction to decide whether to penalize or reward.
-- **Financial impact:** Reduces LP downside during depegs (fewer losses from toxic flow) and preserves liquidity depth; incentivizes restorative trades, improving market quality and fee revenue sustainability.
+- **Financial impact:** Reduces LP downside during depegs (fewer losses from toxic flow) and preserves liquidity depth; incentivizes restorative trades, improving market quality and fee revenue sustainability. Rebates align trader behavior with parity restoration, keeping pool TVL healthier and fee revenue more stable.
 
 ## Architecture at a Glance
 - **STASHook (Uniswap V4 hook):** Implements `BaseOverrideFee` to set per-swap fees based on oracle signals.
@@ -24,11 +24,40 @@ Stable pairs drift from parity during stress due to liquidity imbalance, oracle 
 - **Deployment scripts:** CREATE2/HookMiner-based deployment for deterministic hook addresses.
 - **Fork/demo scripts:** Showcase hook logic on a mainnet fork with mocked oracle updates.
 
+## Diagrams
+**User swap flow**
+```mermaid
+flowchart LR
+  Trader[Trader swap] --> Pool[Uniswap V4 Pool]
+  Pool --> Hook[STAS Hook]
+  Hook --> Adapter[PythOracleAdapter]
+  Adapter --> Pyth[Pyth Oracle]
+  Pyth --> Adapter
+  Adapter --> Hook
+  Hook --> Pool
+  Pool --> Trader
+  subgraph Outcome
+    Penalty[Penalty if worsening depeg]
+    Rebate[Rebate if stabilizing]
+  end
+  Hook --> Outcome
+```
+
+**Hook fee calculation (technical)**
+```mermaid
+flowchart TD
+  Start[swap called] --> Price[Get price + confidence]
+  Price --> Depeg[Compute depeg bps & direction]
+  Depeg --> Bounds[Apply penalty/rebate caps]
+  Bounds --> Fee[Return override fee to PoolManager]
+  Fee --> Settle[PoolManager settles swap with fee/rebate]
+```
+
 ## Flows (user + judge view)
 - **User perspective:** Swap on a STAS-enabled pool → hook reads Pyth price → if swap worsens the depeg, fee increases; if it helps, fee decreases and rebates accrue to the trader.
 - **Judge/technical perspective:** `swap` → `BaseOverrideFee.getFee` → hook computes depeg basis points from Pyth price/confidence → applies penalty or rebate bounds → returns fee to PoolManager → Uniswap V4 core enforces it on the swap.
 
-## Tests and Coverage
+## Tests and 100% Forge Coverage
 - Unit: hook fee math, oracle adapter, mock token.
 - Integration/fork: end-to-end fee behavior demonstration against forked state.
 - Commands:
@@ -43,6 +72,13 @@ forge script script/testing/ForkHookIntegration.s.sol:ForkHookIntegration \
   --fork-url $MAINNET_RPC_URL -vvv
 ```
 Requires `.env` with `MAINNET_RPC_URL`, `PYTH_ADDRESS`, `PRICE_FEED_ID0/1`, `RESERVE_TOKEN`, and `PRIVATE_KEY` (admin defaults to that key).
+
+## Demo Example (txids placeholder)
+If you run a live Sepolia demo, capture txids here for judges:
+- Hook deployment: `<txid>`
+- Adapter deployment: `<txid>`
+- Test token deployment: `<txid>`
+- Sample swap with penalty/rebate: `<txid>`
 
 ## Deployed Addresses (Sepolia)
 Mirror these in `.env` when live:
